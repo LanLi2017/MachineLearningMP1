@@ -48,48 +48,38 @@ def main():
     list_of_lists=[]
     for f in read_files:
         list_of_lists.append(data_cleaning(f))
-    with open('result1.txt','w') as f:
-        f.write(str(list_of_lists))
 
-    # Word2Vec
-    model=Word2Vec(list_of_lists,size=35692,min_count=1)
-    # word_cectors=model.wv['ebola']
-    # print(model.most_similar(positive=['ebola'],topn=10))
-    # print(word_cectors)
+    model=Word2Vec(list_of_lists,min_count=1)
+
     X=model[model.wv.vocab]
-    print(X)
-    #
-    # # pca
-    # reduced_tsvd=PCA(n_components=2)
-    # result=reduced_tsvd.fit_transform(X)
-    # pprint(result)
-    # print("=================")
-    # #training model
-    # from sklearn.cluster import KMeans
-    #
-    # num_clusters = 16
-    #
-    # km = KMeans(n_clusters= num_clusters)
-    #
-    # km.fit(result)
-    #
-    # # all of the labels for the words.......
+
+    # pca
+    reduced_tsvd=PCA(n_components=2)
+
+    result=reduced_tsvd.fit_transform(X)
+    #training model
+    from sklearn.cluster import KMeans
+
+    num_clusters = 4
+
+    km = KMeans(n_clusters= num_clusters)
+
+    km.fit(result)
+
     # clusters=km.labels_.tolist()
-    # print(clusters)
+
+    y_kmeans=km.predict(result)
+
     #
-    # y_kmeans=km.predict(result)
-    #
-    # #
-    # plt.scatter(result[:,0],result[:,1], c=y_kmeans)
-    #
-    # # cluster centers
-    # centers=km.cluster_centers_
-    # plt.scatter(centers[:,0],centers[:,1], c='red')
-    # plt.savefig('clustering.png')
+    plt.scatter(result[:,0],result[:,1], c=y_kmeans)
+
+    # cluster centers
+    centers=km.cluster_centers_
+    plt.scatter(centers[:,0],centers[:,1], c='red')
+    plt.savefig('clustering1.png')
 
 
     # similarity
-
 
 if __name__=='__main__':
     main()
