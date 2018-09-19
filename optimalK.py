@@ -38,50 +38,18 @@ def data_cleaning(filepath):
     filtered_sentence = [w for w in word_token if w not in stop_words]
     return filtered_sentence
 
+# find the optimal k
+def Kcluster(result):
+    wcc =[]
+    for num_clusters in range(1,11):
 
-# the optimal number of k
-def plotKmeansOptimal(k,result):
-    num_clusters = k
-    km1 = KMeans(n_clusters= num_clusters)
-
-    km1.fit(result)
-
-    # find the optimal k number for k-means clustering
-
-    # clusters=km.labels_.tolist()
-
-    y_kmeans1=km1.predict(result)
-
-    #
+        km=KMeans(num_clusters)
+        km.fit(result)
+        wcc.append(km.inertia_)
     import matplotlib.pyplot as plt
-    plt.scatter(result[:,0],result[:,1], c=y_kmeans1)
-
-    # cluster centers
-    centers=km1.cluster_centers_
-    plt.scatter(centers[:,0],centers[:,1], c='red')
-    plt.savefig('clustering_optimal.png')
-
-
-# when k=16 account number
-def plotKmeansAccount(k, result):
-    num_clusters = k
-    km2 = KMeans(n_clusters= num_clusters)
-
-    km2.fit(result)
-
-    # clusters=km.labels_.tolist()
-
-    y_kmeans2=km2.predict(result)
-
-    #
-    import matplotlib.pyplot as plt
-    plt.scatter(result[:,0],result[:,1], c=y_kmeans2)
-
-    # cluster centers
-    centers=km2.cluster_centers_
-    plt.scatter(centers[:,0],centers[:,1], c='red')
-    plt.savefig('clustering.png')
-
+    plt.scatter(range(1,11),wcc)
+    plt.title("Elbow Method")
+    plt.savefig('Elbow.png')
 
 
 def main():
@@ -99,15 +67,8 @@ def main():
 
     result=reduced_tsvd.fit_transform(X)
 
-
-    # optimal plot for k=5
-    plotKmeansOptimal(5,result)
-
-    # plot for k=16
-    plotKmeansAccount(16,result)
-
-
-
+    #training model
+    Kcluster(result)
 
 
 
